@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const Model = require('./Model');
 
 const definition = {
+  identifier: String,
   name: String,
   description: String,
-  params: {
+  config: {
     type: mongoose.Mixed,
     default: {}
   }

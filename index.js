@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const _ = require('lodash');
+
 const Routes = require('./src/Routes');
 const Connection = require('./src/Connection');
 
-const port = process.env.PORT || 8080;
+const port = _.get(process, 'env.API_PORT', 8080);
 const server = express();
 const router = express.Router();
 

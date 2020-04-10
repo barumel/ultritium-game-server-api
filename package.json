@@ -11,7 +11,10 @@
   "dependencies": {
     "@ultritium/validate": "^0.4.1",
     "body-parser": "^1.19.0",
+    "docker-compose": "^0.23.3",
+    "dockerode": "^3.2.0",
     "express": "^4.17.1",
+    "fs-extra": "^9.0.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.7",
     "uuid": "^7.0.3"

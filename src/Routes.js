@@ -7,9 +7,9 @@ function Routes() {
 
   function init(router) {
     _.forEach(services, (service) => {
-      possibleMethods.forEach((method) => {
-        const handler = service.getHandler(method);
-        const { path, func } = handler;
+      possibleMethods.forEach((m) => {
+        const handler = service.getHandler(m);
+        const { path, func, method } = handler;
         router[method](path, func);
       });
     });
