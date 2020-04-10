@@ -7,4 +7,4 @@ const definition = {
   nickname: String
 };
 
-module.exports = Model({ definition });
+module.exports = Model({ identifier: 'User', definition });

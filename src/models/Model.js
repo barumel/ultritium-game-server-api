@@ -5,7 +5,7 @@ const uuid = require('uuid');
 const { Schema } = mongoose;
 const { v4 } = uuid;
 
-function Model({ definition = {} }) {
+function Model({ identifier, definition = {} }) {
   const schema = new Schema({
     ...definition,
     _id: { type: String, default: v4 },
@@ -19,7 +19,7 @@ function Model({ definition = {} }) {
      }
   });
 
-  return mongoose.model('User', schema);
+  return mongoose.model(identifier, schema);
 }
 
 module.exports = Model;
