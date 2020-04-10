@@ -1,13 +1,10 @@
-const mongoose = require('mongoose');
+const Model = require('./Model');
 
-const { Schema } = mongoose;
-
-const UserSchema = new Schema({
+const definition = {
   username: String,
   firstName: String,
   lastName: String,
   nickname: String
-});
+};
 
-
-module.exports = mongoose.model('User', UserSchema);
+module.exports = Model({ definition });
