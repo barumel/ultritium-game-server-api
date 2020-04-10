@@ -18,7 +18,7 @@ function MainService() {
     func: all
   };
 
-  service.addHander('all', handler);
+  service.addHandler('all', handler);
 
   return Object.freeze(service);
 }

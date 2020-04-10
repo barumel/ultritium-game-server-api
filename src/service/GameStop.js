@@ -45,7 +45,7 @@ function GameStopService() {
     func: stopGame
   };
 
-  service.replaceHandler('get', handler);
+  service.addHandler('get', handler);
 
   return Object.freeze(service);
 }

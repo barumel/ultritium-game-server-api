@@ -21,10 +21,10 @@ function DefaultService({
 
   possibleMethods.forEach((method) => {
     const handler = _.get(defaultHandlers, method)({ basePath, service });
-    service.addHander(method, handler);
+    service.addHandler(method, handler);
   });
 
-  return Object.freeze(service);
+  return service;
 }
 
 module.exports = DefaultService;

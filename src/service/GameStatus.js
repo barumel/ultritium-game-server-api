@@ -47,7 +47,7 @@ function GameStatus() {
     func: gameStatus
   };
 
-  service.replaceHandler('get', handler);
+  service.addHandler('get', handler);
 
   return Object.freeze(service);
 }

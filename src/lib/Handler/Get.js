@@ -12,7 +12,6 @@ function GetHandler({ basePath, service }) {
       res.status(404);
       res.json({ error: err.message });
     }
-    res.json({ message: 'Get a single user' });
   }
 
   return Object.freeze({

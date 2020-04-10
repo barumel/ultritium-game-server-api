@@ -17,19 +17,25 @@ function Service({
         ? _.get(handlers, method.toLowerCase())
         : UnsupportedHandler({ basePath, service, method: method.toLowerCase() });
     },
-    addHander(method, handler) {
+    addHandler(method, handler) {
       if (!_.isUndefined(_.get(handlers, method))) {
-        throw new Error(`Handler "${method}" for service ${id} (${basePath}) already registered. Use replaceHandler to replace it.`);
+        throw new Error(`Handler "${method}" for service ${identifier} (${basePath}) already registered. Use replaceHandler to replace it.`);
       }
 
-      _.isFunction(handler)
-        ? _.set(handlers, `${method.toLowerCase()}.func`, handler)
-        : _.set(handlers, method.toLowerCase(), handler);
+      if (_.isFunction(handler)) {
+        const current = _.get(handlers, method);
+        _.set(handlers, method, { ...current, func: handler });
+      } else {
+        _.set(handlers, method.toLowerCase(), handler);
+      }
     },
     replaceHandler(method, handler) {
-      _.isFunction(handler)
-        ? _.set(handlers, `${method.toLowerCase()}.func`, handler)
-        : _.set(handlers, method.toLowerCase(), handler);
+      if (_.isFunction(handler)) {
+        const current = _.get(handlers, method);
+        _.set(handlers, method, { ...current, func: handler });
+      } else {
+        _.set(handlers, method.toLowerCase(), handler);
+      }
     },
     getModel() {
       return Model;
@@ -48,7 +54,7 @@ function Service({
     }
   };
 
-  return Object.freeze(service);
+  return service;
 }
 
 module.exports = Service;
