@@ -6,23 +6,21 @@ const Model = require('../models/User');
 
 function UserService() {
   const validations = {
-    validations: {
-      username: {
-        type: 'string',
-        required: true
-      },
-      firstName: {
-        type: 'string',
-        required: false
-      },
-      lastName: {
-        type: 'string',
-        required: false
-      },
-      nickname: {
-        type: 'string',
-        required: false
-      }
+    username: {
+      type: 'string',
+      required: true
+    },
+    firstName: {
+      type: 'string',
+      required: false
+    },
+    lastName: {
+      type: 'string',
+      required: false
+    },
+    nickname: {
+      type: 'string',
+      required: false
     }
   };
 
