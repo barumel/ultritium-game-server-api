@@ -16,15 +16,35 @@ function Game({ game }) {
     const ports = _.get(config, 'ports', [])
       .map((p) => `${_.get(p, 'from')}:${_.get(p, 'to')}`);
 
+    const limits = _.get(config, 'limits', { cpus: 1, memory: 1000 });
+    const cpuCount = _.get(limits, 'cpus');
+    const memoryAmount = _.get(limits, 'memory');
+
+    const cpus = _.isNumber(cpuCount)
+      ? cpuCount > 3 ? 3 : cpuCount
+      : 1;
+
+    const memory = _.isNumber(memoryAmount)
+     ? memoryAmount > 6000 ? 6000 : memoryAmount
+     : 500;
+
     const componseFileContent = {
-      version: '3.1',
+      version: '3.7',
       services: {
         [identifier]: {
           image: _.get(config, 'image'),
           container_name: identifier,
           restart: 'always',
           environment,
-          ports
+          ports,
+          deploy: {
+            resources: {
+              limits: {
+                cpus: `${cpus}`,
+                memory: `${memory}M`
+              }
+            }
+          }
         }
       },
       volumes: {
@@ -33,13 +53,13 @@ function Game({ game }) {
     };
 
     await fs.outputJson(composeFilePath, componseFileContent, { spaces: 2 });
-    const result = await compose.upAll({ cwd: composeFileDir });
+    const result = await compose.upAll({ cwd: composeFileDir, log: true, composeOptions: ['--compatibility'] });
 
     return result;
   }
 
   async function stop() {
-    const result = await compose.stop({ cwd: composeFileDir });
+    const result = await compose.stop({ cwd: composeFileDir, log: true, composeOptions: ['--compatibility'] });
 
     return result;
   }

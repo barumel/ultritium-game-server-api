@@ -32,7 +32,7 @@ function GameStopService() {
       res.json(result);
     } catch (err) {
       res.status(500);
-      res.json({ message: err.message });
+      res.json(err);
     }
 
     return true;
