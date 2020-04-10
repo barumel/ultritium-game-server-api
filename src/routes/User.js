@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const mongoose = require('mongoose');
 
 const Route = require('./Route');
 const Model = require('../models/User');
@@ -118,7 +119,7 @@ function UserRoute() {
       }
 
       const existing = await getUserByUsername(payload.username);
-      if (!_.isUndefined(existing) && get(existing, '_id') !== id) {
+      if (!_.isUndefined(existing) && existing._id.toString() !== id) {
         res.status(404);
         res.json({ message: `The given username ${payload.username} is already in use` });
 
@@ -131,8 +132,11 @@ function UserRoute() {
         _id: id
       };
 
-      const user = new Model(data);
-      await user.save();
+      await Model.replaceOne({ _id: id }, data, { new: true, upsert: true });
+      const result = await Model.findById(id);
+
+      res.status(201);
+      res.json(result);
     } catch (err) {
       res.status(500);
       res.json({ error: err.message });

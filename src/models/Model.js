@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
+const uuid = require('uuid');
 
 const { Schema } = mongoose;
+const { v4 } = uuid;
 
 function Model({ definition = {} }) {
-  const schema = new Schema(definition);
+  const schema = new Schema({
+    ...definition,
+    _id: { type: String, default: v4 },
+  });
 
   schema.set('toJSON', {
      transform: function (doc, ret, options) {
