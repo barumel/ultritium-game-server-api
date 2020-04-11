@@ -21,15 +21,15 @@ function GameStatus() {
       for (const game of games) {
         const record = game.getDBRecord();
         const { identifier } = record;
+        const { GAME_STATUS_STOPPED } = game;
 
         let status = {
-          Status: 'nocontainer'
+          status: GAME_STATUS_STOPPED,
+          stats: {}
         };
 
         try {
-          const container = docker.getContainer(identifier);
-          const stats = await container.inspect();
-          status = _.get(stats, 'State', {});
+          status = await game.status();
         } catch (error) {
           console.warn(`Cannot get status for ${record.identifier}`);
           console.log(error);
@@ -37,7 +37,7 @@ function GameStatus() {
 
         const entry = {
           identifier,
-          status
+          ...status
         };
 
         payload.push(entry)
@@ -66,13 +66,23 @@ function GameStatus() {
       }
 
       const { identifier } = record;
-      const container = docker.getContainer(identifier);
-      const result = await container.inspect();
-      const { State } = result;
+      const game = DefaultGame({ game: record });
+      const { GAME_STATUS_STOPPED } = game;
+      let status = {
+        status: GAME_STATUS_STOPPED,
+        stats: {}
+      };
+
+      try {
+        status = await game.status();
+      } catch (error) {
+        console.warn(`Cannot get status for ${identifier}`);
+        console.log(error);
+      }
 
       const payload = {
         identifier,
-        status: State
+        ...status
       };
 
       res.status(200);

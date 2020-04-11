@@ -5,6 +5,11 @@ const compose = require('docker-compose');
 
 const docker = require('../../Docker');
 
+const GAME_STATUS_STOPPED = 'stopped';
+const GAME_STATUS_RUNNING = 'running';
+const GAME_STATUS_ERROR = 'error';
+const GAME_STATUS_STARTING = 'starting';
+
 function Game({ game }) {
   const { identifier, config } = game;
 
@@ -68,9 +73,19 @@ function Game({ game }) {
 
   async function status() {
     const container = docker.getContainer(identifier);
-    const stats = await container.inspect();
+    const inspect = await container.inspect();
+    const stats = _.get(inspect, 'State', {});
 
-    return _.get(stats, 'State', {});
+    let statusCode = GAME_STATUS_STOPPED;
+    if (_.get(stats, 'Error.length', 0) > 0) statusCode = GAME_STATUS_ERROR;
+    if (_.get(stats, 'Running', false)) statusCode = GAME_STATUS_RUNNING;
+
+    const result = {
+      status: statusCode,
+      stats: _.get(stats, 'State', {})
+    };
+
+    return result;
   }
 
   function getDBRecord() {
@@ -78,6 +93,10 @@ function Game({ game }) {
   }
 
   return Object.freeze({
+    GAME_STATUS_STOPPED,
+    GAME_STATUS_RUNNING,
+    GAME_STATUS_ERROR,
+    GAME_STATUS_STARTING,
     identifier,
     start,
     stop,
