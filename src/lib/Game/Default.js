@@ -3,6 +3,8 @@ const fs = require('fs-extra');
 const _ = require('lodash');
 const compose = require('docker-compose');
 
+const docker = require('../../Docker');
+
 function Game({ game }) {
   const { identifier, config } = game;
 
@@ -64,9 +66,23 @@ function Game({ game }) {
     return result;
   }
 
+  async function status() {
+    const container = docker.getContainer(identifier);
+    const stats = await container.inspect();
+
+    return _.get(stats, 'State', {});
+  }
+
+  function getDBRecord() {
+    return _.cloneDeep(game);
+  }
+
   return Object.freeze({
+    identifier,
     start,
-    stop
+    stop,
+    status,
+    getDBRecord
   });
 }
 

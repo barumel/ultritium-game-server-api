@@ -3,15 +3,55 @@ const _ = require('lodash');
 const Service = require('../lib/Service/Service');
 const docker = require('../Docker');
 const Model = require('../models/Game');
+const DefaultGame = require('../lib/Game/Default');
 
 function GameStatus() {
   const service = Service({
     identifier: 'gamestart',
     basePath: '/game/start',
-    allowedMethods: ['get']
+    allowedMethods: ['all', 'get']
   });
 
-  async function gameStatus(req, res) {
+  async function gameStatusAll(req, res) {
+    try {
+      const result = await Model.find({}).lean().exec();
+      const games = result.map((record) => DefaultGame({ game: record }));
+
+      const payload = [];
+      for (const game of games) {
+        const record = game.getDBRecord();
+        const { identifier } = record;
+
+        let status = {
+          Status: 'nocontainer'
+        };
+
+        try {
+          const container = docker.getContainer(identifier);
+          const stats = await container.inspect();
+          status = _.get(stats, 'State', {});
+        } catch (error) {
+          console.warn(`Cannot get status for ${record.identifier}`);
+          console.log(error);
+        }
+
+        const entry = {
+          identifier,
+          status
+        };
+
+        payload.push(entry)
+      }
+
+      res.status(200);
+      res.json(payload);
+    } catch (err) {
+      res.status(500);
+      res.json({ message: err.message });
+    }
+  }
+
+  async function gameStatusGet(req, res) {
     const { params } = req;
     const { id } = params;
 
@@ -30,8 +70,13 @@ function GameStatus() {
       const result = await container.inspect();
       const { State } = result;
 
+      const payload = {
+        identifier,
+        status: State
+      };
+
       res.status(200);
-      res.json(State);
+      res.json(payload);
     } catch (err) {
       res.status(500);
       res.json({ message: err.message });
@@ -40,14 +85,22 @@ function GameStatus() {
     return true;
   }
 
-  const handler = {
+  const allHandler = {
+    id: 'gamestatus-all',
+    path: '/game/status',
+    method: 'get',
+    func: gameStatusAll
+  };
+
+  const getHandler = {
     id: 'gamestatus-get',
     path: '/game/status/:id',
     method: 'get',
-    func: gameStatus
+    func: gameStatusGet
   };
 
-  service.addHandler('get', handler);
+  service.addHandler('all', allHandler);
+  service.addHandler('get', getHandler);
 
   return Object.freeze(service);
 }
