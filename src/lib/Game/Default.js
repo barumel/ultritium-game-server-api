@@ -65,6 +65,12 @@ function Game({ game }) {
     return result;
   }
 
+  async function restart() {
+    const result = await compose.restartAll({ cwd: composeFileDir, log: true, composeOptions: ['--compatibility'] });
+
+    return result;
+  }
+
   async function stop() {
     const result = await compose.stop({ cwd: composeFileDir, log: true, composeOptions: ['--compatibility'] });
 
@@ -100,6 +106,7 @@ function Game({ game }) {
     identifier,
     start,
     stop,
+    restart,
     status,
     getDBRecord
   });
