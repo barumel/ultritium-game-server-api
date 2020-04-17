@@ -1,7 +1,7 @@
 {
   "name": "@ultritium/game-server-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "Ultritium game server api",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,5 +25,9 @@
     "eslint-config-es": "^3.19.53",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/barumel/ultritium-game-server-api.git"
   }
 }
