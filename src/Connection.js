@@ -8,7 +8,8 @@ function Connection() {
       user: _.get(process, 'env.MONGODB_USER', 'foo'),
       pass: _.get(process, 'env.MONGODB_PASS', 'barbaz'),
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
     };
 
     const url = `mongodb://${_.get(process, 'env.MONGODB_HOST', 'localhost')}:${_.get(process, 'env.MONGODB_PORT', '27017')}`;
