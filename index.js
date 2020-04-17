@@ -17,7 +17,7 @@ server.use(bodyParser.json());
 Routes().init(router);
 Connection().init();
 
-server.use('/', router);
+server.use('/api', router);
 
 server.listen(port);
 console.info('Server listening to ' + port);

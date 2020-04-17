@@ -8,7 +8,7 @@ function MainService() {
   });
 
   function all(req, res) {
-    res.json({ message: 'Main content' });
+    res.json({ message: 'Everything fine' });
   }
 
   const handler = {
