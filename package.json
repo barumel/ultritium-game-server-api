@@ -1,5 +1,5 @@
 {
-  "name": "@ultritium/server-admin-api",
+  "name": "@ultritium/game-server-api",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
